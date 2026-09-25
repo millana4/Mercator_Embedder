@@ -1,0 +1,27 @@
+services:
+  embedder:
+    build: .
+    container_name: emb-app
+    restart: unless-stopped
+    environment:
+      SERVICE_API_KEY: ${SERVICE_API_KEY}
+    ports:
+      - "127.0.0.1:8030:8000"   # только loopback: ядро ходит по сети docker
+    volumes:
+      - emb-models:/models      # кеш файлов модели, скачивается один раз
+    mem_limit: 4g
+    networks:
+      - core
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  emb-models:
+
+networks:
+  core:
+    external: true
+    name: ${CORE_NETWORK}
