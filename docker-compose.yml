@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       SERVICE_API_KEY: ${SERVICE_API_KEY}
+      TZ: Europe/Moscow
     ports:
       - "127.0.0.1:8030:8000"   # только loopback: ядро ходит по сети docker
     volumes:
